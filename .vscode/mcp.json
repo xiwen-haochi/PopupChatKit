@@ -1,0 +1,21 @@
+{
+  "servers": {
+    // "promptx": {
+    //   // 指定使用 npx 运行 promptx 服务
+    //   "command": "npx",
+    //   // 启动参数配置
+    //   "args": [
+    //     "-y",
+    //     "-f",
+    //     "--registry",
+    //     "https://registry.npmjs.org",
+    //     "dpml-prompt@beta",
+    //     "mcp-server"
+    //   ]
+    // }
+    "promptx": {
+      "command": "npx",
+      "args": ["-y", "@promptx/mcp-server"]
+    }
+  }
+}

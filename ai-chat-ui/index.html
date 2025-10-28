@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PopupChatKit - UI 原型展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --danger: #f56565;
+            --warning: #ed8936;
+            --bg-light: #f7fafc;
+            --bg-dark: #2d3748;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+                'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .page-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .page-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .page-badge {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .page-content {
+            padding: 20px;
+            min-height: 400px;
+            background: var(--bg-light);
+        }
+
+        .mockup {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .mockup-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mockup-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-primary);
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .ui-preview {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: white;
+            min-height: 200px;
+        }
+
+        .chat-bubble {
+            background: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin: 8px 0;
+            max-width: 80%;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .chat-bubble.user {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            margin-left: auto;
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .input-mock {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .btn-mock {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .sidebar-mock {
+            width: 200px;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .sidebar-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            background: var(--bg-light);
+            font-size: 0.9rem;
+        }
+
+        .floating-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+        }
+
+        .popup-preview {
+            position: relative;
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 150px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+
+        .config-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .config-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .image-placeholder {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .history-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .history-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .history-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        .tech-stack {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        .tech-stack h3 {
+            margin-bottom: 15px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 PopupChatKit</h1>
+            <p>双模式 AI 对话系统 - UI 原型展示</p>
+        </div>
+
+        <!-- 独立模式页面 -->
+        <h2 style="color: white; margin-bottom: 20px; font-size: 2rem;">📱 独立模式页面</h2>
+        
+        <div class="grid">
+            <!-- 1. 首页/配置页 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>🏠 首页 (index.html)</h2>
+                    <span class="page-badge">入口页</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>欢迎信息和项目介绍</li>
+                            <li>API Key 配置入口</li>
+                            <li>模型选择 (智谱AI/通义千问)</li>
+                            <li>快速开始按钮</li>
+                            <li>功能导航卡片</li>
+                        </ul>
+                    </div>
+
+                    <div class="ui-preview">
+                        <h3 style="text-align: center; color: var(--primary); margin-bottom: 20px;">
+                            ✨ 欢迎使用 PopupChatKit
+                        </h3>
+                        <div class="config-item">
+                            <div class="config-label">智谱 API Key</div>
+                            <div class="input-mock" style="color: var(--text-secondary);">
+                                请输入您的 API Key...
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">通义千问 API Key</div>
+                            <div class="input-mock" style="color: var(--text-secondary);">
+                                请输入您的 API Key...
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <div class="btn-mock" style="display: inline-block;">开始对话</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 对话页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>💬 对话页面 (chat.html)</h2>
+                    <span class="page-badge">核心功能</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>实时对话界面</li>
+                            <li>流式响应显示 (打字机效果)</li>
+                            <li>Markdown 渲染</li>
+                            <li>代码高亮显示</li>
+                            <li>图片上传和分析</li>
+                            <li>会话管理 (新建/切换/删除)</li>
+                        </ul>
+                    </div>
+
+                    <div class="ui-preview">
+                        <div class="chat-bubble">
+                            你好!我是 AI 助手,有什么可以帮你的吗?
+                        </div>
+                        <div class="chat-bubble user">
+                            请帮我写一个 Python 函数
+                        </div>
+                        <div class="chat-bubble">
+                            当然!这是一个示例函数:<br>
+                            <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">
+                                def hello(): ...
+                            </code>
+                        </div>
+                        <div class="input-group" style="margin-top: 15px;">
+                            <div class="input-mock">输入消息...</div>
+                            <div class="btn-mock">发送</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 历史记录页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>📚 历史记录 (history.html)</h2>
+                    <span class="page-badge">数据管理</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>会话列表展示</li>
+                            <li>按时间排序</li>
+                            <li>搜索和筛选</li>
+                            <li>导出对话记录</li>
+                            <li>删除会话</li>
+                            <li>查看会话详情</li>
+                        </ul>
+                    </div>
+
+                    <div class="ui-preview">
+                        <div class="input-group">
+                            <div class="input-mock">🔍 搜索历史对话...</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-title">📝 Python 函数编写</div>
+                            <div class="history-meta">2025-10-28 10:30 · 15 条消息</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-title">🎨 网页设计讨论</div>
+                            <div class="history-meta">2025-10-27 15:20 · 23 条消息</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-title">💡 项目规划</div>
+                            <div class="history-meta">2025-10-26 09:15 · 8 条消息</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 绘画页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>🎨 绘画页面 (draw.html)</h2>
+                    <span class="page-badge">创作工具</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>文本生成图片</li>
+                            <li>参数配置 (尺寸/风格/数量)</li>
+                            <li>图片预览和下载</li>
+                            <li>历史记录查看</li>
+                            <li>提示词优化建议</li>
+                        </ul>
+                    </div>
+
+                    <div class="ui-preview">
+                        <div class="input-group">
+                            <div class="input-mock">描述你想要的图片...</div>
+                            <div class="btn-mock">生成</div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div class="config-label">生成参数</div>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <div class="input-mock" style="flex: 1;">1024x1024</div>
+                                <div class="input-mock" style="flex: 1;">写实风格</div>
+                            </div>
+                        </div>
+                        <div class="image-grid" style="margin-top: 15px;">
+                            <div class="image-placeholder">🖼️</div>
+                            <div class="image-placeholder">🎨</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 设置页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>⚙️ 设置页面 (settings.html)</h2>
+                    <span class="page-badge">配置中心</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>API Key 管理</li>
+                            <li>默认模型选择</li>
+                            <li>主题切换 (亮色/暗色)</li>
+                            <li>对话参数配置</li>
+                            <li>数据导出和清理</li>
+                            <li>关于信息</li>
+                        </ul>
+                    </div>
+
+                    <div class="ui-preview">
+                        <div class="config-item">
+                            <div class="config-label">🤖 默认模型</div>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <div class="btn-mock">智谱 AI</div>
+                                <div class="btn-mock" style="background: var(--bg-light); color: var(--text-primary); border: 1px solid var(--border);">
+                                    通义千问
+                                </div>
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">🎨 主题设置</div>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <div class="btn-mock">☀️ 亮色</div>
+                                <div class="btn-mock" style="background: var(--bg-dark);">🌙 暗色</div>
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">💾 数据管理</div>
+                            <div class="btn-mock" style="margin-top: 10px; background: var(--danger);">
+                                清空所有数据
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. 关于页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>ℹ️ 关于页面 (about.html)</h2>
+                    <span class="page-badge">信息展示</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>项目介绍</li>
+                            <li>功能特性说明</li>
+                            <li>使用教程</li>
+                            <li>常见问题 FAQ</li>
+                            <li>版本信息</li>
+                            <li>开源协议</li>
+                        </ul>
+                    </div>
+
+                    <div class="ui-preview">
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">🚀</div>
+                            <h3 style="color: var(--primary); margin-bottom: 10px;">PopupChatKit</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                                双模式 AI 对话系统
+                            </p>
+                            <div style="display: inline-block; background: var(--bg-light); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;">
+                                v1.0.0
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">✨ 核心特性</div>
+                            <ul class="feature-list" style="margin-top: 10px;">
+                                <li>独立 Web 应用</li>
+                                <li>嵌入式弹窗</li>
+                                <li>多模型支持</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 嵌入模式页面 -->
+        <h2 style="color: white; margin: 40px 0 20px 0; font-size: 2rem;">🔌 嵌入模式页面</h2>
+        
+        <div class="grid">
+            <!-- 7. 弹窗界面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>💬 弹窗界面 (popup.html)</h2>
+                    <span class="page-badge">嵌入组件</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>悬浮按钮触发</li>
+                            <li>弹出式对话窗口</li>
+                            <li>网页内容总结</li>
+                            <li>截图分析</li>
+                            <li>JSON 结构化输出</li>
+                            <li>最小化和拖拽</li>
+                        </ul>
+                    </div>
+
+                    <div class="popup-preview">
+                        <div style="position: absolute; left: 20px; top: 20px; color: var(--text-secondary);">
+                            ← 宿主网页内容区域
+                        </div>
+                        <div class="floating-button">💬</div>
+                    </div>
+
+                    <div class="ui-preview" style="margin-top: 15px;">
+                        <div style="border: 2px solid var(--primary); border-radius: 12px; padding: 15px; box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                                <h4 style="color: var(--primary);">AI 助手</h4>
+                                <div style="display: flex; gap: 8px;">
+                                    <div style="width: 32px; height: 32px; background: var(--bg-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;">📄</div>
+                                    <div style="width: 32px; height: 32px; background: var(--bg-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;">📷</div>
+                                    <div style="width: 32px; height: 32px; background: var(--bg-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;">✕</div>
+                                </div>
+                            </div>
+                            <div style="min-height: 100px; margin-bottom: 10px;">
+                                <div class="chat-bubble" style="font-size: 0.9rem;">
+                                    我可以帮你总结这个网页 📄
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-mock" style="font-size: 0.9rem;">问我任何问题...</div>
+                                <div class="btn-mock">发送</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. 演示页面 -->
+            <div class="page-card">
+                <div class="page-header">
+                    <h2>🎭 演示页面 (demo.html)</h2>
+                    <span class="page-badge">集成示例</span>
+                </div>
+                <div class="page-content">
+                    <div class="mockup">
+                        <div class="mockup-title">
+                            <span class="icon">🎯</span>
+                            页面功能
+                        </div>
+                        <ul class="feature-list">
+                            <li>嵌入模式演示</li>
+                            <li>集成代码示例</li>
+                            <li>配置选项说明</li>
+                            <li>最佳实践展示</li>
+                            <li>实时预览</li>
+                        </ul>
+                    </div>
+
+                    <div class="ui-preview">
+                        <div class="config-item">
+                            <div class="config-label">📝 集成代码</div>
+                            <div style="background: var(--bg-dark); color: #a5f3fc; padding: 15px; border-radius: 8px; margin-top: 10px; font-family: 'Courier New', monospace; font-size: 0.85rem; overflow-x: auto;">
+&lt;script src="popup.js"&gt;&lt;/script&gt;<br>
+&lt;script&gt;<br>
+&nbsp;&nbsp;PopupChat.init({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;apiKey: 'your-key',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model: 'zhipu'<br>
+&nbsp;&nbsp;});<br>
+&lt;/script&gt;
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">✅ 集成完成</div>
+                            <div style="color: var(--success); margin-top: 10px;">
+                                ✓ 弹窗已加载<br>
+                                ✓ API 连接正常<br>
+                                ✓ 功能运行中
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 技术栈 -->
+        <div class="tech-stack">
+            <h3 style="text-align: center; margin-bottom: 20px;">🛠️ 技术栈</h3>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🎨</div>
+                    <div>HTML5 + CSS3</div>
+                </div>
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">⚡</div>
+                    <div>Vanilla JS</div>
+                </div>
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🐍</div>
+                    <div>Python + FastAPI</div>
+                </div>
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🤖</div>
+                    <div>pydantic-ai</div>
+                </div>
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">💾</div>
+                    <div>SQLite</div>
+                </div>
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🚀</div>
+                    <div>uvicorn + uv</div>
+                </div>
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🧠</div>
+                    <div>智谱 AI</div>
+                </div>
+                <div class="tech-item">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">💬</div>
+                    <div>通义千问</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h3 style="margin-bottom: 10px;">📖 设计说明</h3>
+            <p style="max-width: 800px; margin: 0 auto; line-height: 1.8; opacity: 0.9;">
+                此页面展示了 PopupChatKit 所有功能页面的 UI 原型。采用网格布局,每个卡片代表一个独立页面。
+                设计遵循现代 Web 设计规范,注重用户体验和视觉美观。所有页面均为静态原型,仅用于开发参考,不含实际交互功能。
+            </p>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <p>© 2025 PopupChatKit · v1.0.0 · Made with ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加一些简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 页面卡片悬停效果已在 CSS 中实现
+            console.log('PopupChatKit UI 原型已加载');
+            
+            // 可以在这里添加更多交互效果
+            const cards = document.querySelectorAll('.page-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

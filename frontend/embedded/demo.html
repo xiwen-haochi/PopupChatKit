@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PopupChatKit 嵌入式演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 80px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.95;
+            margin-bottom: 40px;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .content-card h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .content-card h3 {
+            color: #4c51bf;
+            font-size: 22px;
+            margin: 30px 0 15px 0;
+        }
+
+        .content-card p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature-item h4 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .code-block .comment {
+            color: #64748b;
+        }
+
+        .code-block .tag {
+            color: #38bdf8;
+        }
+
+        .code-block .attr {
+            color: #fbbf24;
+        }
+
+        .code-block .string {
+            color: #86efac;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .demo-section h3 {
+            color: #0369a1;
+            margin-bottom: 15px;
+        }
+
+        .demo-section p {
+            color: #0c4a6e;
+            font-size: 16px;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin: 0 10px;
+            color: #667eea;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <div class="badge">🚀 轻量级 AI 聊天插件</div>
+            <h1>PopupChatKit</h1>
+            <p>一行代码,让你的网站拥有智能对话能力</p>
+        </div>
+
+        <div class="content-card">
+            <h2>📦 快速开始</h2>
+            <p>只需要在你的网页中添加以下代码:</p>
+            
+            <div class="code-block">
+                <span class="comment">&lt;!-- 引入 PopupChatKit 插件 --&gt;</span><br>
+                <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="string">"popup.js"</span><span class="tag">&gt;&lt;/script&gt;</span><br>
+                <br>
+                <span class="comment">&lt;!-- 初始化插件 --&gt;</span><br>
+                <span class="tag">&lt;script&gt;</span><br>
+                &nbsp;&nbsp;PopupChatKit.init({<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;apiBase: <span class="string">'http://localhost:8000/api'</span><br>
+                &nbsp;&nbsp;});<br>
+                <span class="tag">&lt;/script&gt;</span>
+            </div>
+
+            <p>就是这么简单!现在点击右下角的悬浮按钮试试看吧 👉</p>
+        </div>
+
+        <div class="content-card">
+            <h2>✨ 核心特性</h2>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <div class="icon">🎨</div>
+                    <h4>零依赖</h4>
+                    <p>纯原生 JavaScript 实现,无需任何第三方库,极致轻量</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">⚡</div>
+                    <h4>快速集成</h4>
+                    <p>一行代码即可集成,支持任何网站和框架</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">🎯</div>
+                    <h4>高度可定制</h4>
+                    <p>支持自定义位置、颜色、尺寸等多种配置</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">📱</div>
+                    <h4>响应式设计</h4>
+                    <p>完美适配移动端和桌面端,自动调整布局</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">🔄</div>
+                    <h4>流式对话</h4>
+                    <p>支持流式响应,实时显示AI回复内容</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">💬</div>
+                    <h4>会话管理</h4>
+                    <p>自动管理会话上下文,支持连续对话</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">📄</div>
+                    <h4>智能总结</h4>
+                    <p>输入"总结网页"即可自动提取并总结当前页面内容</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">🔍</div>
+                    <h4>智能搜索</h4>
+                    <p>快速在页面中查找并提取相关信息</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">📝</div>
+                    <h4>文本解释</h4>
+                    <p>选中文字后点击气泡,自动解释和翻译</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">📋</div>
+                    <h4>复制HTML</h4>
+                    <p>一键复制完整网页代码,方便导出和分享</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>⚙️ 配置选项</h2>
+            
+            <div class="code-block">
+                PopupChatKit.init({<br>
+                &nbsp;&nbsp;<span class="comment">// API 基础地址</span><br>
+                &nbsp;&nbsp;apiBase: <span class="string">'http://localhost:8000/api'</span>,<br>
+                <br>
+                &nbsp;&nbsp;<span class="comment">// 按钮位置: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'</span><br>
+                &nbsp;&nbsp;position: <span class="string">'bottom-right'</span>,<br>
+                <br>
+                &nbsp;&nbsp;<span class="comment">// 按钮大小(像素)</span><br>
+                &nbsp;&nbsp;buttonSize: <span class="string">60</span>,<br>
+                <br>
+                &nbsp;&nbsp;<span class="comment">// 按钮颜色</span><br>
+                &nbsp;&nbsp;buttonColor: <span class="string">'#6366f1'</span>,<br>
+                <br>
+                &nbsp;&nbsp;<span class="comment">// 聊天窗口最大宽度(像素)</span><br>
+                &nbsp;&nbsp;maxWidth: <span class="string">400</span>,<br>
+                <br>
+                &nbsp;&nbsp;<span class="comment">// 聊天窗口最大高度(像素)</span><br>
+                &nbsp;&nbsp;maxHeight: <span class="string">600</span>,<br>
+                <br>
+                &nbsp;&nbsp;<span class="comment">// 层级</span><br>
+                &nbsp;&nbsp;zIndex: <span class="string">9999</span><br>
+                });
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>🎮 试试看!</h3>
+            <p>
+                点击右下角的聊天按钮
+                <span class="arrow">→</span>
+                输入你的问题
+                <span class="arrow">→</span>
+                获得AI智能回复
+            </p>
+            <p style="margin-top: 15px; font-size: 14px;">
+                💡 <b>试试这些功能：</b><br>
+                • 输入"总结这个页面" - 自动总结网页内容<br>
+                • 输入"找快速开始的方法" - 智能搜索页面信息<br>
+                • 选中任意文字后<b>点击气泡</b> - 自动解释（无需手动输入！）<br>
+                • 输入"复制网页HTML" - 一键复制完整代码
+            </p>
+        </div>
+
+        <div class="content-card">
+            <h2>🎯 智能功能演示</h2>
+            
+            <h3>1️⃣ 网页总结</h3>
+            <p>自动提取并总结当前页面内容。输入以下任一关键词：</p>
+            <ul style="padding-left: 20px; color: #555;">
+                <li>"总结这个网页"</li>
+                <li>"概括页面内容"</li>
+                <li>"这个页面讲了什么？"</li>
+            </ul>
+            
+            <h3>2️⃣ 智能搜索</h3>
+            <p>快速在页面中查找信息。试试这些：</p>
+            <ul style="padding-left: 20px; color: #555;">
+                <li>"找配置选项"</li>
+                <li>"搜索API方法"</li>
+                <li>"页面里有使用场景吗？"</li>
+            </ul>
+            
+            <h3>3️⃣ 选中文本解释 ⭐ 新体验</h3>
+            <p>选中下面这段文字，会出现可点击的提示气泡：</p>
+            <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #3b82f6;">
+                <b style="color: #0369a1;">PopupChatKit</b> 是一个基于纯原生 JavaScript 开发的轻量级 AI 聊天插件，采用 IIFE 模式封装，通过流式响应技术实现实时对话体验。
+            </div>
+            <p style="font-size: 14px; color: #666;">
+                💡 <b>新功能：</b>选中文字后会出现"💡 点击解释这段文字"气泡，<b>直接点击气泡</b>即可自动发送！<br>
+                🎯 试试选中"IIFE"或"流式响应"等专业术语！
+            </p>
+            
+            <h3>4️⃣ 复制网页 HTML 🆕</h3>
+            <p>快速获取当前网页的完整 HTML 代码：</p>
+            <ul style="padding-left: 20px; color: #555;">
+                <li>"复制网页 HTML"</li>
+                <li>"复制页面代码"</li>
+                <li>"导出 HTML"</li>
+            </ul>
+            <p style="font-size: 14px; color: #666;">
+                💡 复制后可以粘贴到文本编辑器保存为 .html 文件，在浏览器中打开查看完整效果！
+            </p>
+        </div>
+
+        <div class="content-card">
+            <h2>🔧 API 方法</h2>
+            
+            <h3>控制方法</h3>
+            <p>PopupChatKit 提供了以下方法供你调用:</p>
+            
+            <div class="code-block">
+                <span class="comment">// 打开聊天窗口</span><br>
+                PopupChatKit.open();<br>
+                <br>
+                <span class="comment">// 关闭聊天窗口</span><br>
+                PopupChatKit.close();<br>
+                <br>
+                <span class="comment">// 切换显示/隐藏</span><br>
+                PopupChatKit.toggle();
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>🛠️ 高级用法</h2>
+            </div>
+
+            <h3>事件监听</h3>
+            <p>你可以通过自定义按钮触发聊天窗口:</p>
+            
+            <div class="code-block">
+                <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="string">"PopupChatKit.open()"</span><span class="tag">&gt;</span>咨询客服<span class="tag">&lt;/button&gt;</span>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>📋 使用场景</h2>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <div class="icon">🏢</div>
+                    <h4>企业官网</h4>
+                    <p>提供 7×24 小时智能客服,解答用户疑问</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">🛒</div>
+                    <h4>电商平台</h4>
+                    <p>智能导购助手,帮助用户快速找到商品</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">📚</div>
+                    <h4>在线教育</h4>
+                    <p>学习助手,回答学生问题,提供辅导</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="icon">💼</div>
+                    <h4>SaaS 产品</h4>
+                    <p>产品使用指导,快速解决用户问题</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>🎯 技术特点</h2>
+            <ul style="padding-left: 20px; color: #555;">
+                <li style="margin: 10px 0;"><span class="highlight">零依赖</span> - 不依赖任何第三方库</li>
+                <li style="margin: 10px 0;"><span class="highlight">超轻量</span> - 压缩后仅几KB</li>
+                <li style="margin: 10px 0;"><span class="highlight">易集成</span> - 一行代码即可使用</li>
+                <li style="margin: 10px 0;"><span class="highlight">高性能</span> - 流式响应,极速体验</li>
+                <li style="margin: 10px 0;"><span class="highlight">可定制</span> - 丰富的配置选项</li>
+                <li style="margin: 10px 0;"><span class="highlight">响应式</span> - 完美适配各种设备</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with ❤️ by PopupChatKit</p>
+        <p><a href="https://github.com/yourusername/PopupChatKit">GitHub</a> | <a href="#">文档</a> | <a href="#">示例</a></p>
+    </footer>
+
+    <!-- 引入 PopupChatKit 插件 -->
+    <script src="popup.js"></script>
+
+    <!-- 初始化插件 -->
+    <script>
+        PopupChatKit.init({
+            apiBase: 'http://localhost:8000/api',
+            position: 'bottom-right',
+            buttonColor: '#6366f1'
+        });
+    </script>
+</body>
+</html>

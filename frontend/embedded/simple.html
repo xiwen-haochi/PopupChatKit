@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PopupChatKit 简单示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #6366f1;
+            padding-bottom: 10px;
+        }
+        p {
+            line-height: 1.8;
+            color: #666;
+        }
+        .tip {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>👋 欢迎使用 PopupChatKit</h1>
+        
+        <p>这是一个简单的演示页面,展示如何在任何网页中快速集成 AI 聊天功能。</p>
+        
+        <div class="tip">
+            <strong>💡 提示:</strong> 点击右下角的蓝色聊天按钮,即可开始与 AI 对话!
+        </div>
+        
+        <h2>如何使用?</h2>
+        <p>只需在你的 HTML 页面中添加以下代码:</p>
+        
+        <pre style="background: #1e293b; color: #e2e8f0; padding: 20px; border-radius: 8px; overflow-x: auto;">
+&lt;!-- 引入插件 --&gt;
+&lt;script src="popup.js"&gt;&lt;/script&gt;
+
+&lt;!-- 初始化 --&gt;
+&lt;script&gt;
+  PopupChatKit.init({
+    apiBase: 'http://localhost:8000/api'
+  });
+&lt;/script&gt;</pre>
+        
+        <h2>功能特点</h2>
+        <ul>
+            <li>✅ 零依赖,超轻量</li>
+            <li>✅ 一行代码集成</li>
+            <li>✅ 流式对话体验</li>
+            <li>✅ 响应式设计</li>
+            <li>✅ 高度可定制</li>
+        </ul>
+        
+        <h2>配置选项</h2>
+        <p>你可以自定义按钮的位置、颜色、大小等:</p>
+        <ul>
+            <li><code>position</code> - 按钮位置 (bottom-right, bottom-left, top-right, top-left)</li>
+            <li><code>buttonColor</code> - 按钮颜色 (任何 CSS 颜色值)</li>
+            <li><code>buttonSize</code> - 按钮大小 (像素值)</li>
+            <li><code>maxWidth</code> - 聊天窗口最大宽度</li>
+            <li><code>maxHeight</code> - 聊天窗口最大高度</li>
+        </ul>
+        
+        <p style="margin-top: 40px; text-align: center; color: #999;">
+            Made with ❤️ by PopupChatKit
+        </p>
+    </div>
+
+    <!-- 引入 PopupChatKit 插件 -->
+    <script src="popup.js"></script>
+
+    <!-- 初始化插件 -->
+    <script>
+        PopupChatKit.init({
+            apiBase: 'http://localhost:8000/api'
+        });
+    </script>
+</body>
+</html>
