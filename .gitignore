@@ -216,4 +216,4 @@ __pycache__/
 *.pyo
 *.pyd
 BACKEND_ARCHITECTURE.md
-.github_release_checklist.txt
+TECHNICAL_SUMMARY.md
