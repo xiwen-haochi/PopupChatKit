@@ -104,10 +104,15 @@
             cursor: pointer;
             transition: all 0.2s;
             border: 2px solid transparent;
+            position: relative;
         }
 
         .session-item:hover {
             border-color: var(--primary);
+        }
+
+        .session-item:hover .session-delete {
+            opacity: 1;
         }
 
         .session-item.active {
@@ -119,11 +124,36 @@
             font-weight: 500;
             color: var(--text-primary);
             margin-bottom: 4px;
+            padding-right: 30px;
         }
 
         .session-time {
             font-size: 0.85rem;
             color: var(--text-secondary);
+        }
+
+        .session-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .session-delete:hover {
+            background: #e53e3e;
         }
 
         /* 主聊天区域 */
@@ -636,8 +666,25 @@
                     item.innerHTML = `
                         <div class="session-title">${escapeHtml(session.title)}</div>
                         <div class="session-time">${formatTime(session.updated_at)}</div>
+                        <button class="session-delete" title="删除会话">×</button>
                     `;
-                    item.onclick = () => loadSession(session.id, session.title);
+                    
+                    // 点击会话项切换会话
+                    item.onclick = (e) => {
+                        // 如果点击的是删除按钮，不切换会话
+                        if (e.target.classList.contains('session-delete')) {
+                            return;
+                        }
+                        loadSession(session.id, session.title);
+                    };
+                    
+                    // 删除按钮事件
+                    const deleteBtn = item.querySelector('.session-delete');
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteSession(session.id, session.title);
+                    };
+                    
                     sessionList.appendChild(item);
                 });
             } catch (error) {
@@ -676,6 +723,35 @@
             } catch (error) {
                 console.error('创建会话失败:', error);
                 showError('创建会话失败,请重试');
+            }
+        }
+
+        // 删除会话
+        async function deleteSession(sessionId, title) {
+            // 确认删除
+            if (!confirm(`确定要删除会话"${title}"吗？此操作无法撤销。`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/sessions/${sessionId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('删除失败');
+                }
+
+                // 如果删除的是当前会话，创建新会话
+                if (sessionId === currentSessionId) {
+                    await createNewSession();
+                } else {
+                    // 否则只刷新会话列表
+                    loadSessions();
+                }
+            } catch (error) {
+                console.error('删除会话失败:', error);
+                showError('删除会话失败,请重试');
             }
         }
 
@@ -752,10 +828,17 @@
                 // 判断是否为图片生成请求
                 const shouldGenerateImage = currentMode === 'image' || isDrawRequest(message);
                 
+                console.log('[画图检测] 消息:', message);
+                console.log('[画图检测] currentMode:', currentMode);
+                console.log('[画图检测] isDrawRequest:', isDrawRequest(message));
+                console.log('[画图检测] shouldGenerateImage:', shouldGenerateImage);
+                
                 if (shouldGenerateImage) {
+                    console.log('✅ 触发画图功能');
                     // 生成图片
                     await generateImage(message);
                 } else {
+                    console.log('📝 普通对话');
                     // 普通对话
                     await sendChatMessage(message);
                 }

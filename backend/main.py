@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,7 +28,7 @@ THIS_DIR = Path(__file__).parent
 PROJECT_ROOT = THIS_DIR.parent
 FRONTEND_DIR = PROJECT_ROOT / 'frontend'
 DATA_DIR = PROJECT_ROOT / 'data'
-DB_FILE = DATA_DIR / 'chat.db'
+DB_FILE = DATA_DIR / os.getenv('DB_NAME', 'chat.db')
 
 # 确保数据目录存在
 DATA_DIR.mkdir(exist_ok=True)
@@ -286,36 +287,36 @@ async def delete_session(
 # 配置管理 API
 # ============================================
 
-@app.get('/api/config')
-async def get_all_config(database: Database = Depends(get_db)):
-    """获取所有配置"""
-    # 这里可以返回非敏感配置
-    default_model = await database.get_config('default_model')
-    theme = await database.get_config('theme')
-    return {
-        'default_model': default_model or 'zhipu',
-        'theme': theme or 'light'
-    }
+# @app.get('/api/config')
+# async def get_all_config(database: Database = Depends(get_db)):
+#     """获取所有配置"""
+#     # 这里可以返回非敏感配置
+#     default_model = await database.get_config('default_model')
+#     theme = await database.get_config('theme')
+#     return {
+#         'default_model': default_model or 'zhipu',
+#         'theme': theme or 'light'
+#     }
 
 
-@app.get('/api/config/{key}')
-async def get_config(
-    key: str,
-    database: Database = Depends(get_db)
-):
-    """获取指定配置"""
-    value = await database.get_config(key)
-    return {'key': key, 'value': value}
+# @app.get('/api/config/{key}')
+# async def get_config(
+#     key: str,
+#     database: Database = Depends(get_db)
+# ):
+#     """获取指定配置"""
+#     value = await database.get_config(key)
+#     return {'key': key, 'value': value}
 
 
-@app.post('/api/config')
-async def save_config(
-    request: ConfigRequest,
-    database: Database = Depends(get_db)
-):
-    """保存配置"""
-    await database.save_config(request.key, request.value)
-    return {'message': 'Config saved'}
+# @app.post('/api/config')
+# async def save_config(
+#     request: ConfigRequest,
+#     database: Database = Depends(get_db)
+# ):
+#     """保存配置"""
+#     await database.save_config(request.key, request.value)
+#     return {'message': 'Config saved'}
 
 
 # ============================================
@@ -470,8 +471,7 @@ async def analyze_image(
         
         # 转换为base64
         base64_image = base64.b64encode(image_data).decode('utf-8')
-        
-        # 调用智谱AI视觉模型 (glm-4v-flash)
+
         api_key = os.getenv('ZHIPU_API_KEY')
         if not api_key:
             return {'error': 'API Key 未配置'}, 500
@@ -675,7 +675,7 @@ if __name__ == '__main__':
     
     uvicorn.run(
         'main:app',
-        host='0.0.0.0',
-        port=8000,
+        host=os.getenv('HOST', '0.0.0.0'),
+        port=int(os.getenv('PORT', 8000)),
         reload=True
     )
