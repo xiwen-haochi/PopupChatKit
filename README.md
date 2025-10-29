@@ -1,17 +1,5 @@
 # 🚀 PopupChatKit
 
-<div align="center">
-
-**一个轻量级、零依赖的 AI 聊天插件**  
-让任何网站瞬间拥有智能对话能力
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-green.svg)](https://fastapi.tiangolo.com/)
-[![智谱AI](https://img.shields.io/badge/智谱AI-GLM--4-purple.svg)](https://open.bigmodel.cn/)
-
-</div>
-
 ---
 
 ## 📖 目录
@@ -28,23 +16,23 @@
 
 ## ✨ 核心特性
 
-### 💬 智能对话系统
+### 体验
+- **一键集成** - 一行代码嵌入任何网站
+- **零依赖** - 前端纯原生 JavaScript（约 700 行）
+- **响应式设计** - 完美适配桌面端和移动端
+
+### 智能对话系统
 - **流式响应** - 打字机效果，实时展示 AI 回复
 - **上下文记忆** - 基于 SQLite 的完整会话管理
-- **多模型支持** - 集成智谱 AI (GLM-4-flashx)
+- **多模型支持** - 集成智谱 AI
 - **工具调用** - 支持 Function Call 和 MCP 协议
 
-### 🎨 多模态能力
+### 多模态能力
 - **AI 绘图** - CogView-4 模型，文本生成精美图片
 - **图片识别** - GLM-4V-Flash 视觉分析
 - **智能天气** - 实时查询全国城市天气（高德地图 API）
 - **数学计算** - MCP 工具，精确计算数学表达式
 
-### � 用户体验
-- **零依赖** - 前端纯原生 JavaScript（约 700 行）
-- **响应式设计** - 完美适配桌面端和移动端
-- **高度可定制** - 丰富的配置选项和主题定制
-- **一键集成** - 一行代码嵌入任何网站
 
 ---
 
