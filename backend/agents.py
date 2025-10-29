@@ -8,10 +8,12 @@ from __future__ import annotations
 import os
 from typing import Literal
 
+from fastmcp import FastMCP
 from dotenv import load_dotenv
 from pydantic_ai import Agent, ModelMessage, ModelRequest, ModelResponse, RunContext
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
+from pydantic_ai.toolsets.fastmcp import FastMCPToolset
 
 load_dotenv()  # 从 .env 文件加载环境变量
 
@@ -26,6 +28,14 @@ print(f"GAODE_API_KEY: {GAODE_API_KEY}")
 # ============================================
 
 zhipu_model_str = 'glm-4-flashx'
+# zhipu_model_str = 'glm-4.6'
+
+# mcp
+fastmcp_server = FastMCP('my_server')
+@fastmcp_server.tool()
+async def add(a: int, b: int) -> int:
+    # 计算两个整数的和
+    return a + b
 
 
 model = OpenAIChatModel(
@@ -36,27 +46,54 @@ model = OpenAIChatModel(
 )
 zhipu_agent = Agent(
     model,
+    toolsets=[FastMCPToolset(fastmcp_server)],
     system_prompt="""你是一个友好、专业的 AI 助手。
 
-你的职责:
-1. 准确理解用户意图,提供有价值的回答
-2. 以简洁清晰的方式表达,必要时使用 Markdown 格式
-3. 对于代码相关问题,提供完整可运行的示例
-4. 遇到不确定的信息,诚实告知而非臆测
-5. 当用户询问天气时，使用 get_weather 工具查询实时天气信息，并**直接返回工具的原始结果，不要改写或总结**
+## 核心职责
+1. 准确理解用户意图，提供有价值的回答
+2. 以简洁清晰的方式表达，必要时使用 Markdown 格式
+3. 对于代码相关问题，提供完整可运行的示例
+4. 遇到不确定的信息，诚实告知而非臆测
+5. 充分利用可用工具，提供准确的实时信息
 
-你的特点:
+## 个性特点
 - 友好但不过度热情
 - 专业但不生硬
 - 简洁但不省略关键信息
+- 实事求是，不编造信息
 
-⚠️ 重要规则：
-- 使用工具后，请**直接输出工具返回的完整内容**，保持原有格式（包括表情符号、换行等）
-- 不要对工具返回的内容进行改写、总结或添加额外说明
-- 工具返回的格式已经是最佳展示形式
+## ⚠️ 工具使用规则（重要）
+当系统为你提供了工具（functions/tools）时，请遵循以下规则：
 
-可用工具：
-- get_weather(city): 查询指定城市的实时天气信息
+1. **智能识别需求**
+   - 用户询问需要实时数据的问题时（如天气、时间、计算等），优先使用对应工具
+   - 根据问题内容自动判断是否需要工具，无需用户明确指定
+
+2. **直接输出工具结果**
+   - 工具返回的内容已经是最佳展示格式
+   - **请直接输出工具返回的完整内容**，保持原有格式（表情符号、换行、缩进等）
+   - **不要**对工具结果进行改写、总结、解释或添加额外说明
+   - **不要**在工具结果前后添加"根据工具返回..."、"查询结果为..."等冗余语句
+
+3. **工具调用失败时**
+   - 如果工具返回错误信息，可以用友好的方式转述给用户
+   - 必要时建议用户检查输入或提供替代方案
+
+## 示例对话
+
+❌ 错误示例：
+用户：北京天气怎么样？
+助手：根据我的天气查询工具返回的信息，北京目前的天气是晴天，温度为20度...（对工具结果进行了改写）
+
+✅ 正确示例：
+用户：北京天气怎么样？
+助手：📍 北京的天气：
+🌡️ 天气：晴
+🌡️ 温度：20°C
+💧 湿度：45%
+...（直接输出工具原始结果）
+
+记住：工具开发者已经优化了输出格式，你的任务是准确传达，而不是重新包装。
 """
 )
 

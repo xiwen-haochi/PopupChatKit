@@ -1321,7 +1321,17 @@
         }
 
         function formatTime(timestamp) {
-            const date = new Date(timestamp);
+            // 处理后端返回的 UTC 时间字符串
+            // SQLite CURRENT_TIMESTAMP 返回格式: "2025-10-29 15:31:35"
+            // 需要添加 'Z' 表示 UTC 时间，或者手动转换
+            let date;
+            if (typeof timestamp === 'string' && !timestamp.includes('Z') && !timestamp.includes('+')) {
+                // 如果是 SQLite 格式的时间字符串，添加 'Z' 表示 UTC
+                date = new Date(timestamp + 'Z');
+            } else {
+                date = new Date(timestamp);
+            }
+            
             const now = new Date();
             const diff = now - date;
             

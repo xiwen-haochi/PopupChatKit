@@ -147,7 +147,7 @@ async def chat_stream(
                         'type': 'content',
                         'content': text
                     }).encode('utf-8') + b'\n'
-            
+            print("Full response:", full_response)
             # 保存新消息到数据库 (用于 AI 上下文)
             await database.add_messages(
                 chat_req.session_id,
