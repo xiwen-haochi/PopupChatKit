@@ -20,6 +20,7 @@ ZHIPU_API_KEY = os.getenv('ZHIPU_API_KEY', '')
 OPENAI_BASE_URL = os.getenv('OPENAI_BASE_URL', '')
 GAODE_API_KEY = os.getenv('GAODE_API_KEY', '')
 print(f"ZHIPU_API_KEY: {ZHIPU_API_KEY}")
+print(f"GAODE_API_KEY: {GAODE_API_KEY}")
 # ============================================
 # 配置智谱 AI 模型
 # ============================================
@@ -42,12 +43,17 @@ zhipu_agent = Agent(
 2. 以简洁清晰的方式表达,必要时使用 Markdown 格式
 3. 对于代码相关问题,提供完整可运行的示例
 4. 遇到不确定的信息,诚实告知而非臆测
-5. 当用户询问天气时，使用 get_weather 工具查询实时天气信息
+5. 当用户询问天气时，使用 get_weather 工具查询实时天气信息，并**直接返回工具的原始结果，不要改写或总结**
 
 你的特点:
 - 友好但不过度热情
 - 专业但不生硬
 - 简洁但不省略关键信息
+
+⚠️ 重要规则：
+- 使用工具后，请**直接输出工具返回的完整内容**，保持原有格式（包括表情符号、换行等）
+- 不要对工具返回的内容进行改写、总结或添加额外说明
+- 工具返回的格式已经是最佳展示形式
 
 可用工具：
 - get_weather(city): 查询指定城市的实时天气信息
@@ -153,21 +159,27 @@ async def get_weather(ctx: RunContext[None], city: str) -> str:
             "keywords": city_name,
             "subdistrict": 0
         }
+        print(f"🔍 [天气工具] 查询城市编码 - 城市: {city_name}")
+        print(f"🔍 [天气工具] API Key: {GAODE_API_KEY[:10]}...{GAODE_API_KEY[-10:]}")
         
         try:
             async with httpx.AsyncClient(timeout=10) as client:
                 response = await client.get(url, params=params)
                 result = response.json()
+                print(f"🔍 [天气工具] 响应状态码: {response.status_code}")
+                print(f"🔍 [天气工具] 响应内容: {result}")
                 
                 if result.get("status") == "1" and result.get("districts"):
                     adcode = result["districts"][0]["adcode"]
                     print(f"🗺️  城市编码: {city_name} → {adcode}")
                     return adcode
                 else:
-                    print(f"❌ 未找到城市: {city_name}")
+                    print(f"❌ 未找到城市: {city_name}, status={result.get('status')}, info={result.get('info')}")
                     return None
         except Exception as e:
             print(f"❌ 获取城市编码失败: {e}")
+            import traceback
+            traceback.print_exc()
             return None
     
     # 获取城市编码
@@ -191,8 +203,9 @@ async def get_weather(ctx: RunContext[None], city: str) -> str:
             
             if data.get("status") == "1" and data.get("lives"):
                 weather_info = data["lives"][0]
+                # 直接返回格式化的天气信息，前面加上标记让AI直接输出
                 result = (
-                    f"📍 {weather_info['city']}的天气：\n"
+                    f"📍 {weather_info['city']}的天气：\n\n"
                     f"🌡️ 天气：{weather_info['weather']}\n"
                     f"🌡️ 温度：{weather_info['temperature']}°C\n"
                     f"💧 湿度：{weather_info['humidity']}%\n"
@@ -201,6 +214,7 @@ async def get_weather(ctx: RunContext[None], city: str) -> str:
                     f"🕐 更新时间：{weather_info['reporttime']}"
                 )
                 print(f"✅ [天气工具] 查询成功: {city}")
+                print(f"✅ [天气工具] 返回结果:\n{result}")
                 return result
             else:
                 error_msg = data.get("info", "未知错误")
