@@ -362,5 +362,5 @@ class Database:
         return await self._loop.run_in_executor(
             self._executor,
             partial(func, **kwargs),
-            *args,
+            *args, # type: ignore
         )
